@@ -1,2 +1,2 @@
 # doraemon
-Dora is a dev tool list.
+Doraemon is a dev tool list.

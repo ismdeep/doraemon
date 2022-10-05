@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:8.0-oracle
+    environment:
+      MYSQL_ROOT_PASSWORD: doraemon31415
+    ports:
+      - '3306:3306'
+    restart: always
