@@ -26,7 +26,7 @@ func TestConnectToMySQL(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ConnectToMySQL(tt.args.dsn, tt.args.timeout)
+			_ = ConnectToMySQL(tt.args.dsn, tt.args.timeout)
 		})
 	}
 }

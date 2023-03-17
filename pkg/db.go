@@ -3,7 +3,6 @@ package pkg
 import (
 	"errors"
 	"fmt"
-	"os"
 	"strings"
 	"time"
 
@@ -12,20 +11,18 @@ import (
 )
 
 // ConnectToMySQL connect to mysql
-func ConnectToMySQL(dsn string, timeout int) {
+func ConnectToMySQL(dsn string, timeout int) error {
 	startTime := time.Now().Second()
 	for {
 		if _, err := gorm.Open(mysql.Open(dsn)); err != nil {
 			if time.Now().Second()-startTime >= timeout {
-				fmt.Println("Error: timeout")
-				os.Exit(1)
+				return errors.New("timeout")
 			}
 			time.Sleep(1 * time.Second)
 			continue
 		}
 
-		fmt.Println("OK")
-		return
+		return nil
 	}
 }
 

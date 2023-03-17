@@ -11,29 +11,31 @@ import (
 
 // DBWait wait
 func DBWait() *cobra.Command {
-	v := viper.New()
+	var dialect string
+	var dsn string
+	var timeout int
+
 	cmd := &cobra.Command{
-		Use:   "wait",
-		Short: "wait",
-		Run: func(cmd *cobra.Command, args []string) {
-			dialect := v.GetString("dialect")
-			dsn := v.GetString("dsn")
-			timeout := v.GetInt("timeout")
+		Use:          "wait",
+		Short:        "wait",
+		SilenceUsage: true,
+		RunE: func(cmd *cobra.Command, args []string) error {
 			switch dialect {
 			case "mysql":
-				pkg.ConnectToMySQL(dsn, timeout)
+				return pkg.ConnectToMySQL(dsn, timeout)
 			default:
-				fmt.Println("Error:", fmt.Sprintf("%v is not supported", dialect))
+				return fmt.Errorf("unsupported dialect: %v", dialect)
 			}
 		},
 	}
 
-	cmd.Flags().String("dialect", "", "db dialect. e.g. mysql")
+	cmd.Flags().StringVar(&dialect, "dialect", "", "db dialect. e.g. mysql")
 	_ = cmd.MarkFlagRequired("dialect")
-	cmd.Flags().String("dsn", "", "db dsn.")
+
+	cmd.Flags().StringVar(&dsn, "dsn", "", "db dsn.")
 	_ = cmd.MarkFlagRequired("dsn")
-	cmd.Flags().Int("timeout", 60, "timeout (s)")
-	_ = v.BindPFlags(cmd.Flags())
+
+	cmd.Flags().IntVar(&timeout, "timeout", 60, "timeout (s)")
 
 	return cmd
 }
